@@ -1,0 +1,15 @@
+{
+	"extends": "airbnb-base",
+	"env": {
+		"node": true,
+		"es6": true
+	},
+	"rules": {
+		"linebreak-style": 0,
+		"no-tabs": 0,
+		"indent": ["error", "tab"],
+		"max-len": 0,
+		"no-console": 0,
+		"object-curly-newline": 0
+	}
+}
