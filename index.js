@@ -1,15 +1,15 @@
-const { connectDB } = require("./src/configs/db.config");
-const { logger } = require("./src/middlewares/logger.middleware");
-const express = require("express");
-const guestReviewsRoutes = require("./src/routes/guestReviews.routes");
+const express = require('express');
+const { connectDB } = require('./src/configs/configDatabase');
+const router = require('./src/routes');
+const middleware = require('./src/middlewares');
 
 const app = express();
 
 connectDB();
 
-app.use(logger);
+app.use(middleware.logger);
 
-app.use("/", guestReviewsRoutes);
+app.use('/', router);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
