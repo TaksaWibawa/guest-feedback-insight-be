@@ -1,14 +1,19 @@
-async function paginate(options, model) {
-	const count_data = await model.countDocuments().exec();
-	const limit = parseInt(options.limit) || 10;
-	const page = parseInt(options.page) || 1;
-	const totalPage = Math.ceil(count_data / limit);
+/**
+ * function to paginate data
+ * @param {{ limit: number, page: number }} options	- The options to paginate the data
+ * @param {import('mongoose').Model<import('mongoose').Document>} model	- The mongoose model
+ * @returns {Promise<{ countData: number, limit: number, page: number, totalPage: number }>}	- The paginated data
+ */
+async function paginate(options, dataLength) {
+	const limit = parseInt(options.limit, 10) || 10;
+	const page = parseInt(options.page, 10) || 1;
+	const totalPage = Math.ceil(dataLength / limit);
 
 	return {
-		count_data: count_data,
-		limit: limit,
-		page: page,
-		totalPage: totalPage,
+		countData: dataLength,
+		limit,
+		page,
+		totalPage,
 	};
 }
 
