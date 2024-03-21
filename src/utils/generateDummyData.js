@@ -7,36 +7,57 @@ function generateDummyData() {
 	const data = [];
 
 	categories.forEach((category) => {
-		const sentimentScore = Math.random() * 2 - 1;
-		const trend = Math.random() < 0.5 ? 'Positive' : 'Negative';
+		let trend;
+		const randomValue = Math.random() * (1 - 0) + 0;
+
+		if (randomValue === 0.5) {
+			trend = 'Neutral';
+		} else if (randomValue > 0.5) {
+			trend = 'Positive';
+		} else {
+			trend = 'Negative';
+		}
 		const mentions = Math.floor(Math.random() * (200 - 50 + 1) + 50);
 		let positive;
 		let negative;
+		let neutral;
+		let sentimentScore;
 
 		if (trend === 'Positive') {
 			positive = Math.floor(Math.random() * (mentions - mentions / 2 + 1) + mentions / 2);
 			negative = mentions - positive;
-		} else {
+			neutral = 0;
+			sentimentScore = Math.random() * (1 - 0.5) + 0.5; // sentiment score between 0.5 and 1
+		} else if (trend === 'Negative') {
 			negative = Math.floor(Math.random() * (mentions - mentions / 2 + 1) + mentions / 2);
 			positive = mentions - negative;
+			neutral = 0;
+			sentimentScore = Math.random() * (0.5 - 0) + 0; // sentiment score between 0 and 0.5
+		} else {
+			neutral = mentions;
+			positive = 0;
+			negative = 0;
+			sentimentScore = 0.5;
 		}
 
 		const subItems = subCategories.map((subCategory) => ({
 			category: subCategory,
-			sentiment_score: parseFloat(sentimentScore.toFixed(2)),
+			sentimentScore: parseFloat(sentimentScore.toFixed(2)),
 			trend,
 			mentions,
 			positive,
 			negative,
+			neutral,
 		}));
 
 		data.push({
 			category,
-			sentiment_score: parseFloat(sentimentScore.toFixed(2)),
+			sentimentScore: parseFloat(sentimentScore.toFixed(2)),
 			trend,
 			mentions,
 			positive,
 			negative,
+			neutral,
 			items: subItems,
 		});
 	});

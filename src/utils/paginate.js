@@ -1,7 +1,7 @@
 /**
  * function to paginate data
  * @param {{ limit: number, page: number }} options	- The options to paginate the data
- * @param {import('mongoose').Model<import('mongoose').Document>} model	- The mongoose model
+ * @param {number} dataLength	- The length of the data to be paginated
  * @returns {Promise<{ countData: number, limit: number, page: number, totalPage: number }>}	- The paginated data
  */
 async function paginate(options, dataLength) {
