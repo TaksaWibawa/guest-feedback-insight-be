@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
+
+const { DB_COLLECTION_1 } = process.env;
 
 const GUEST_REVIEWS_SCHEMA = new mongoose.Schema(
 	{
@@ -54,4 +57,4 @@ const GUEST_REVIEWS_SCHEMA = new mongoose.Schema(
 	{ versionKey: false, timestamps: true }
 );
 
-module.exports = mongoose.model('guest_reviews', GUEST_REVIEWS_SCHEMA, 'listingsAndReviews');
+module.exports = mongoose.model('guest_reviews', GUEST_REVIEWS_SCHEMA, DB_COLLECTION_1);
