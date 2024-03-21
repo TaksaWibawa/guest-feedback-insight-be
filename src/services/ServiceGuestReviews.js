@@ -9,7 +9,7 @@ class ServiceGuestReviews {
 
 	async getAllReviews(query) {
 		const { limit, page, sortField, sortOrder } = query;
-		const dataLength = countData(this.model);
+		const dataLength = await countData(this.model);
 
 		const options = {
 			limit: limit || 10,

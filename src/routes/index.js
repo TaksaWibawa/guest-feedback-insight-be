@@ -10,5 +10,6 @@ router.get('/guest-reviews', middleware.attachGetAllReviewsToRequest, controller
 
 router.get('/sentiment-analytics', middleware.attachGetSentimentCategoriesToRequest, controllerSentimentAnalytics.getSentimentCategories);
 router.get('/sentiment-analytics/:category', middleware.attachGetSentimentCategoryItemsToRequest, controllerSentimentAnalytics.getSentimentCategoryItems);
+router.get('/sentiment-statistics', middleware.attachGetSentimentStatisticsToRequest, controllerSentimentAnalytics.getSentimentStatistics);
 
 module.exports = router;
