@@ -42,6 +42,18 @@ const middleware = {
 			next(error);
 		}
 	},
+
+	attachGetSentimentStatisticsToRequest: async (req, _res, next) => {
+		try {
+			const service = new ServiceSentimentAnalytics();
+
+			const statistics = await service.getSentimentStatistics();
+			req.data = statistics;
+			next();
+		} catch (error) {
+			next(error);
+		}
+	},
 };
 
 module.exports = middleware;
