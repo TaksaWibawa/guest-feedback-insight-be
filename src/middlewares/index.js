@@ -7,12 +7,36 @@ const middleware = {
 		next();
 	},
 
-	attachGetAllReviewsToRequest: async (req, _res, next) => {
+	// attachGetAllReviewsToRequest: async (req, _res, next) => {
+	// 	try {
+	// 		const service = new ServiceGuestReviews();
+
+	// 		const reviews = await service.getAllReviews(req.query);
+	// 		req.data = reviews;
+	// 		next();
+	// 	} catch (error) {
+	// 		next(error);
+	// 	}
+	// },
+
+	attachGetReviewsByVendorToRequest: async (req, _res, next) => {
 		try {
 			const service = new ServiceGuestReviews();
 
-			const reviews = await service.getAllReviews(req.query);
-			req.data = reviews;
+			const review = await service.getReviewsByVendor(req.params.id, req.params.vendor, req.query);
+			req.data = review;
+			next();
+		} catch (error) {
+			next(error);
+		}
+	},
+
+	attachGetReviewDetailsToRequest: async (req, _res, next) => {
+		try {
+			const service = new ServiceGuestReviews();
+
+			const review = await service.getReviewDetails(req.params.id, req.params.vendor, req.params.review_id);
+			req.data = review;
 			next();
 		} catch (error) {
 			next(error);
