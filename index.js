@@ -2,29 +2,24 @@ const express = require('express');
 const cors = require('cors');
 const { connectDB } = require('./src/configs/configDatabase');
 const router = require('./src/routes');
-const middleware = require('./src/middlewares');
+const { accessLogMiddleware } = require('./src/middlewares');
+const ServiceAuth = require('./src/services/AuthService');
+
+const service = new ServiceAuth();
 
 const app = express();
+app.use(cors());
+app.use(accessLogMiddleware.logger);
+app.use(express.json());
+app.use('/', router);
 
 const startServer = async () => {
 	try {
 		await connectDB();
-
-		app.use(cors());
-
-		app.use((err, req, res, _next) => {
-			console.error(err.stack);
-			res.status(500).send('Something broke!');
-		});
-
-		app.use(middleware.logger);
-
-		app.use('/', router);
-
+		await service.init();
 		const PORT = process.env.PORT || 3000;
-		app.listen(PORT, () => {
-			console.log(`Server is running on port ${PORT}`);
-		});
+		const HOST = process.env.HOST || '0.0.0.0';
+		app.listen(PORT, HOST, () => console.log(`Server is running on http://${HOST}:${PORT}`));
 	} catch (err) {
 		console.error('DB connection failed', err);
 		process.exit(1);
