@@ -1,17 +1,27 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../../swagger.json');
 
-const controllerGuestReviews = require('../controllers/controllerGuestReviews');
-const controllerSentimentAnalytics = require('../controllers/controllerSentimentAnalytics');
-const middleware = require('../middlewares');
+const { authController, reviewsController, sentimentController } = require('../controllers');
+const { authMiddleware } = require('../middlewares');
 
 const router = express.Router();
 
-// router.get('/guest-reviews', middleware.attachGetAllReviewsToRequest, controllerGuestReviews.getReviewsData);
-router.get('/guest-reviews/:id/vendors/:vendor', middleware.attachGetReviewsByVendorToRequest, controllerGuestReviews.getReviewsByVendor);
-router.get('/guest-reviews/:id/vendors/:vendor/reviews/:review_id', middleware.attachGetReviewDetailsToRequest, controllerGuestReviews.getReviewDetails);
+// ? Swagger Docs
+router.use('/api-docs', swaggerUi.serve);
+router.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
-router.get('/sentiment-analytics', middleware.attachGetSentimentCategoriesToRequest, controllerSentimentAnalytics.getSentimentCategories);
-router.get('/sentiment-analytics/:category', middleware.attachGetSentimentCategoryItemsToRequest, controllerSentimentAnalytics.getSentimentCategoryItems);
-router.get('/sentiment-statistics', middleware.attachGetSentimentStatisticsToRequest, controllerSentimentAnalytics.getSentimentStatistics);
+// ? Authentication
+router.post('/auth/register', authController.createUser);
+
+// ? Guest Reviews
+router.get('/reviews/:property_id', authMiddleware.verifyTokenUser, reviewsController.getReviewsByVendor);
+router.get('/reviews/detail/:review_id', authMiddleware.verifyTokenUser, reviewsController.getReviewDetail);
+
+// ? Sentiment Analytics
+router.get('/sentiment/categories', authMiddleware.verifyTokenUser, sentimentController.getSentimentCategories);
+router.get('/sentiment/analytics', authMiddleware.verifyTokenUser, sentimentController.getSentimentAnalytics);
+router.get('/sentiment/statistics', authMiddleware.verifyTokenUser, sentimentController.getSentimentStatistics);
+router.get('/sentiment/word-cloud/:category_id', authMiddleware.verifyTokenUser, sentimentController.getSentimentWordCloud);
 
 module.exports = router;
