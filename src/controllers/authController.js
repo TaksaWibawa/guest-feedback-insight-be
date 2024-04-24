@@ -37,7 +37,7 @@ const authController = {
       if (data.message === 'User already exists' && !data) {
         return utils.sendResponse(res, 409, null, 'User already exists');
       }
-      return utils.sendResponse(res, 201, data, 'User created successfully');
+      return utils.sendResponse(res, 201, null, 'User created successfully');
     } catch (error) {
       return utils.sendResponse(res, 500, null, error.message);
     }

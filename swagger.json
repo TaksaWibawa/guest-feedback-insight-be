@@ -1,0 +1,546 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Sentiment Analysis API",
+		"description": "API for Intern in GuestPro for Sentiment Analysis"
+	},
+	"schemes": ["http"],
+	"securityDefinitions": {
+		"Bearer": {
+			"type": "apiKey",
+			"name": "Authorization",
+			"in": "cookie",
+			"description": "Add 'Bearer' before the token",
+			"x-example": "Bearer 123"
+		}
+	},
+	"paths": {
+		"/auth/login": {
+			"post": {
+				"tags": ["Authentication"],
+				"summary": "Login as a user",
+				"description": "Return a JWT token for a user",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Request body for login",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Login"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Login success",
+						"examples": {
+							"application/json": {
+								"message": "Login success",
+								"data": {
+									"accessToken" : "1234567890"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"401": {
+						"$ref": "#/responses/401"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		},
+		"/auth/register": {
+			"post": {
+				"tags": ["Authentication"],
+				"summary": "Create a new user",
+				"description": "Register a new user",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "User object that needs to be added",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Register"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User created successfully",
+						"examples": {
+							"application/json": {
+								"message": "User created successfully"
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"409": {
+						"$ref": "#/responses/409"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		},
+
+		"/reviews": {
+			"get": {
+				"tags": ["Reviews"],
+				"summary": "Get reviews by vendor",
+				"description": "Get all reviews for a specific vendor",
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"parameters": [
+					{ "$ref": "#/parameters/vendor" },
+					{ "$ref": "#/parameters/page" },
+					{ "$ref": "#/parameters/limit" },
+					{ "$ref": "#/parameters/sortBy" },
+					{ "$ref": "#/parameters/sortOrder" }
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/responses/200-Reviews"
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"401": {
+						"$ref": "#/responses/401"
+					},
+					"404": {
+						"$ref": "#/responses/404"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		},
+		"/reviews/detail/{review_id}": {
+			"get": {
+				"tags": ["Reviews"],
+				"summary": "Get review detail",
+				"description": "Get detail of a specific review",
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"parameters": [
+					{
+						"$ref": "#/parameters/review_id"
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/responses/200-Review-Detail"
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"401": {
+						"$ref": "#/responses/401"
+					},
+					"404": {
+						"$ref": "#/responses/404"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		},
+		"/sentiment/categories": {
+			"get": {
+				"tags": ["Sentiment"],
+				"summary": "Get sentiment categories",
+				"description": "Get all sentiment categories",
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref":"#/responses/200-Sentiment-Categories"
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"401": {
+						"$ref": "#/responses/401"
+					},
+					"404": {
+						"$ref": "#/responses/404"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		},
+		"/sentiment/analytics": {
+			"get": {
+				"tags": ["Sentiment"],
+				"summary": "Get sentiment analytics",
+				"description": "Get sentiment analytics",
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/responses/200-Sentiment-Analytics"
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"401": {
+						"$ref": "#/responses/401"
+					},
+					"404": {
+						"$ref": "#/responses/404"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		},
+		"/sentiment/statistics": {
+			"get": {
+				"tags": ["Sentiment"],
+				"summary": "Get sentiment statistics",
+				"description": "Get sentiment statistics",
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/responses/200-Sentiment-Statistics"
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"401": {
+						"$ref": "#/responses/401"
+					},
+					"404": {
+						"$ref": "#/responses/404"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		},
+		"/sentiment/word-cloud/{category_id}": {
+			"get": {
+				"tags": ["Sentiment"],
+				"summary": "Get sentiment word cloud",
+				"description": "Get sentiment word cloud for a specific category",
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"parameters": [
+					{
+						"$ref": "#/parameters/category_id"
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/responses/200-Sentiment-Wordcloud"
+					},
+					"400": {
+						"$ref": "#/responses/400"
+					},
+					"401": {
+						"$ref": "#/responses/401"
+					},
+					"404": {
+						"$ref": "#/responses/404"
+					},
+					"500": {
+						"$ref": "#/responses/500"
+					}
+				}
+			}
+		}
+	},
+	"responses": {
+		"200-Reviews": {
+			"description": "Data found",
+			"examples": {
+				"application/json": {
+					"message": "Data found",
+					"data": {
+						"reviews": [
+							{
+								"review_id": "1234567890",
+								"review": "This is a review",
+								"vendor": "booking.com"
+							}
+						],
+						"pagination": {
+							"limit": 10,
+							"page": 1,
+							"total_pages": 1,
+							"count_data": 1
+						}
+					}
+				}
+			}
+		},
+		"200-Review-Detail": {
+			"description": "Data found",
+			"examples": {
+				"application/json": {
+					"message": "Data found",
+					"data": {
+						"review_id": "1234567890",
+						"review":"This is a review",
+						"asqe": [
+							{
+								"aspect": "place",
+								"opinion": "good",
+								"sentiment": "positive",
+								"category": "location"
+							}
+						]
+					}
+				}
+			}
+		},
+		"200-Sentiment-Categories": {
+			"description": "Data found",
+			"examples": {
+				"application/json": {
+					"message": "Data found",
+					"data": [
+						{
+							"id": 1,
+							"name": "location" 
+						}
+					]
+				}
+			}
+		},
+		"200-Sentiment-Analytics": {
+			"description": "Data found",
+			"examples": {
+				"application/json": {
+						"message": "Data found",
+						"data": [
+							{
+								"category": "location",
+								"positive": 16,
+								"negative": 5,
+								"neutral": 0
+							}
+						]
+				}
+			}
+		},
+		"200-Sentiment-Statistics": {
+			"description": "Data found",
+			"examples": {
+				"application/json": {
+					"message": "Data found",
+					"data": [
+						{
+							"count": 1,
+							"sentiment": "positive"
+						},
+						{
+							"count": 1,
+							"sentiment": "negative"
+						},
+						{
+							"count": 1,
+							"sentiment": "neutral"
+						}
+					]
+				}
+			}
+		},
+		"200-Sentiment-Wordcloud": {
+			"description": "Data found",
+			"examples": {
+				"application/json": {
+					"message": "Data found",
+					"data": {
+						"wordcloud": [
+							{
+								"value": 1,
+								"text": "good",
+								"polarity": "positive"
+							}
+						]
+					}
+				}
+			}
+		},
+		"400": {
+			"description": "Bad request",
+			"examples": {
+				"application/json": {
+					"message": "Bad request"
+				}
+			}
+		},
+		"401": {
+			"description": "Unauthorized",
+			"examples": {
+				"application/json": {
+					"message": "Unauthorized"
+				}
+			}
+		},
+		"404": {
+			"description": "Data not found",
+			"examples": {
+				"application/json": {
+					"message": "Data not found",
+					"data": []
+				}
+			}
+		},
+		"409": {
+      "description": "User already exists",
+			"examples": {
+				"application/json": {
+					"message": "User already exists"
+				}
+      }
+    },
+		"500": {
+      "description": "Internal server error",
+			"examples": {
+				"application/json": {
+					"message": "Internal server error"
+				}
+			}
+    }
+	},
+	"definitions": {
+		"Login": {
+			"type": "object",
+			"properties": {
+				"email": {
+					"type": "string",
+					"example": "user@example.com"
+				},
+				"password": {
+					"type": "string",
+					"example": "password123"
+				}
+			},
+			"required": ["email", "password"]
+		},
+		"Register": {
+			"type": "object",
+			"properties": {
+				"email": {
+					"type": "string",
+					"example": "user@example.com"
+				},
+				"password": {
+					"type": "string",
+					"example": "password123"
+				},
+				"displayName": {
+					"type": "string",
+					"example": "User"
+				},
+				"phoneNumber": {
+					"type": "string",
+					"example": "+14155552671",
+					"minLength": 8,
+					"maxLength": 15
+				}
+			},
+			"required": ["email", "password", "displayName", "phoneNumber"]
+		}
+	},
+	"parameters": {
+		"review_id": {
+			"name": "review_id",
+			"in": "path",
+			"description": "ID of the review to return",
+			"required": true,
+			"type": "string",
+			"x-example": "1234567890",
+			"minLength": 24,
+			"maxLength": 24
+		},
+		"vendor": {
+			"name": "vendor",
+			"in": "query",
+			"description": "Vendor to filter by",
+			"required": true,
+			"type": "string",
+			"enum": ["booking.com", "airbnb", "tripadvisor", "agoda"],
+			"x-example": "booking.com"
+		},
+		"page": {
+			"name": "page",
+			"in": "query",
+			"description": "Page number",
+			"required": false,
+			"type": "integer",
+			"x-example": "1"
+		},
+		"limit": {
+			"name": "limit",
+			"in": "query",
+			"description": "Number of items per page",
+			"required": false,
+			"type": "integer",
+			"x-example": "10"
+		},
+		"sortBy": {
+			"name": "sortBy",
+			"in": "query",
+			"description": "Field to sort by",
+			"required": false,
+			"type": "string",
+			"x-example": "date"
+		},
+		"sortOrder": {
+			"name": "sortOrder",
+			"in": "query",
+			"description": "Order to sort by (asc/desc)",
+			"required": false,
+			"type": "string",
+			"enum": ["asc", "desc"],
+			"x-example": "desc"
+		},
+		"category_id": {
+			"name": "category_id",
+			"in": "path",
+			"description": "ID of the category to return",
+			"required": true,
+			"type": "integer",
+			"x-example": "1"
+		}
+	}
+}
