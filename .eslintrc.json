@@ -7,10 +7,10 @@
 	"rules": {
 		"linebreak-style": 0,
 		"no-tabs": 0,
-		"indent": ["error", "tab"],
 		"max-len": 0,
 		"no-console": 0,
 		"object-curly-newline": 0,
-		"no-underscore-dangle": 0
+		"no-underscore-dangle": 0,
+		"trailing-comma": "es5"
 	}
 }

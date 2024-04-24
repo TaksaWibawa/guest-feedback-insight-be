@@ -27,11 +27,11 @@ class SentimentService {
 		}
 	}
 
-	// ! will be changed later on
-	async getSentimentAnalysis() {
+	async getSentimentAnalysis(propertyId) {
 		try {
 			const data = await this.modelSentiment
 				.aggregate([
+					{ $match: { property_id: propertyId } },
 					{ $unwind: '$asqe' },
 					{
 						$group: {
@@ -99,10 +99,11 @@ class SentimentService {
 		}
 	}
 
-	async getSentimentStatistics() {
+	async getSentimentStatistics(propertyId) {
 		try {
 			const data = await this.modelSentiment
 				.aggregate([
+					{ $match: { property_id: propertyId } },
 					{ $unwind: '$asqe' },
 					{
 						$group: {
@@ -132,10 +133,11 @@ class SentimentService {
 		}
 	}
 
-	async getSentimentWordCloud(categoryId) {
+	async getSentimentWordCloud(propertyId, categoryId) {
 		try {
 			const data = await this.modelSentiment
 				.aggregate([
+					{ $match: { property_id: propertyId } },
 					{ $unwind: '$asqe' },
 					{
 						$match: {

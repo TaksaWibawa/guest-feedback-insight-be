@@ -4,24 +4,33 @@ const swaggerDocument = require('../../swagger.json');
 
 const { authController, reviewsController, sentimentController } = require('../controllers');
 const { authMiddleware } = require('../middlewares');
+const ROUTES = require('./routes.json');
 
 const router = express.Router();
 
-// ? Swagger Docs
-router.use('/api-docs', swaggerUi.serve);
-router.get('/api-docs', swaggerUi.setup(swaggerDocument));
+const handlers = {
+	login: authController.login,
+	register: authController.createUser,
+	getUserData: authController.getUserData,
+	getReviewsByVendor: reviewsController.getReviewsByVendor,
+	getReviewDetail: reviewsController.getReviewDetail,
+	getSentimentCategories: sentimentController.getSentimentCategories,
+	getSentimentAnalytics: sentimentController.getSentimentAnalytics,
+	getSentimentStatistics: sentimentController.getSentimentStatistics,
+	getSentimentWordCloud: sentimentController.getSentimentWordCloud,
+};
 
-// ? Authentication
-router.post('/auth/register', authController.createUser);
+// ? Swagger
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// ? Guest Reviews
-router.get('/reviews/:property_id', authMiddleware.verifyTokenUser, reviewsController.getReviewsByVendor);
-router.get('/reviews/detail/:review_id', authMiddleware.verifyTokenUser, reviewsController.getReviewDetail);
-
-// ? Sentiment Analytics
-router.get('/sentiment/categories', authMiddleware.verifyTokenUser, sentimentController.getSentimentCategories);
-router.get('/sentiment/analytics', authMiddleware.verifyTokenUser, sentimentController.getSentimentAnalytics);
-router.get('/sentiment/statistics', authMiddleware.verifyTokenUser, sentimentController.getSentimentStatistics);
-router.get('/sentiment/word-cloud/:category_id', authMiddleware.verifyTokenUser, sentimentController.getSentimentWordCloud);
+// ? Routes
+Object.keys(ROUTES).forEach((route) => {
+	const { path, method, handler, isPrivate } = ROUTES[route];
+	if (isPrivate) {
+		router[method](path, authMiddleware.verifyTokenUser, handlers[handler]);
+	} else {
+		router[method](path, handlers[handler]);
+	}
+});
 
 module.exports = router;

@@ -14,16 +14,16 @@ app.use(express.json());
 app.use('/', router);
 
 const startServer = async () => {
-	try {
-		await connectDB();
-		await service.init();
-		const PORT = process.env.PORT || 3000;
-		const HOST = process.env.HOST || '0.0.0.0';
-		app.listen(PORT, HOST, () => console.log(`Server is running on http://${HOST}:${PORT}`));
-	} catch (err) {
-		console.error('DB connection failed', err);
-		process.exit(1);
-	}
+  try {
+    await connectDB();
+    await service.init();
+    const PORT = process.env.PORT || 3000;
+    const HOST = process.env.HOST || '0.0.0.0';
+    app.listen(PORT, HOST, () => console.log(`Server is running on http://${HOST}:${PORT} or http://localhost:${PORT}`));
+  } catch (err) {
+    console.error('DB connection failed', err);
+    process.exit(1);
+  }
 };
 
 startServer();

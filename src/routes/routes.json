@@ -1,0 +1,56 @@
+{
+	"login": {
+		"path": "/auth/login",
+		"method": "post",
+		"handler": "login",
+		"isPrivate": false
+	},
+	"register": {
+		"path": "/auth/register",
+		"method": "post",
+		"handler": "register",
+		"isPrivate": false
+	},
+	"userData": {
+		"path": "/auth/user",
+		"method": "get",
+		"handler": "getUserData",
+		"isPrivate": true
+	},
+	"reviews": {
+		"path": "/reviews",
+		"method": "get",
+		"handler": "getReviewsByVendor",
+		"isPrivate": true
+	},
+	"reviewDetail": {
+		"path": "/reviews/detail/:review_id",
+		"method": "get",
+		"handler": "getReviewDetail",
+		"isPrivate": true
+	},
+	"sentimentCategories": {
+		"path": "/sentiment/categories",
+		"method": "get",
+		"handler": "getSentimentCategories",
+		"isPrivate": true
+	},
+	"sentimentAnalytics": {
+		"path": "/sentiment/analytics",
+		"method": "get",
+		"handler": "getSentimentAnalytics",
+		"isPrivate": true
+	},
+	"sentimentStatistics": {
+		"path": "/sentiment/statistics",
+		"method": "get",
+		"handler": "getSentimentStatistics",
+		"isPrivate": true
+	},
+	"sentimentWordCloud": {
+		"path": "/sentiment/word-cloud/:category_id",
+		"method": "get",
+		"handler": "getSentimentWordCloud",
+		"isPrivate": true
+	}
+}

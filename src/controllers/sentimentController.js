@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const { SentimentService } = require('../services');
 const utils = require('../utils');
 
@@ -16,9 +17,11 @@ const sentimentController = {
 		}
 	},
 
-	async getSentimentAnalytics(_req, res) {
+	async getSentimentAnalytics(req, res) {
+		const { uid: property_id } = req.user;
+
 		try {
-			const data = await service.getSentimentAnalysis();
+			const data = await service.getSentimentAnalysis(property_id);
 			if (!data || data.length === 0) {
 				return utils.sendResponse(res, 404, [], 'Data not found');
 			}
@@ -28,9 +31,11 @@ const sentimentController = {
 		}
 	},
 
-	async getSentimentStatistics(_req, res) {
+	async getSentimentStatistics(req, res) {
+		const { uid: property_id } = req.user;
+
 		try {
-			const data = await service.getSentimentStatistics();
+			const data = await service.getSentimentStatistics(property_id);
 			if (!data || data.length === 0) {
 				return utils.sendResponse(res, 404, [], 'Data not found');
 			}
@@ -41,11 +46,15 @@ const sentimentController = {
 	},
 
 	async getSentimentWordCloud(req, res) {
-		if (!req.params.category_id) {
-			return utils.sendResponse(res, 400, null);
+		const { uid: property_id } = req.user;
+		const { category_id } = req.params;
+
+		if (!category_id || !category_id.trim()) {
+			return utils.sendResponse(res, 400, [], 'Category ID is required');
 		}
+
 		try {
-			const data = await service.getSentimentWordCloud(req.params.category_id);
+			const data = await service.getSentimentWordCloud(property_id, category_id);
 			if (!data || data.length === 0) {
 				return utils.sendResponse(res, 404, [], 'Data not found');
 			}
