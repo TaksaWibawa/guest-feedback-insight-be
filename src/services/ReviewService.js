@@ -25,7 +25,7 @@ class ReviewService {
       const options = {
         limit: query.limit || 10,
         page: query.page || 1,
-        sortField: query.sortField || 'date',
+        sortBy: query.sortBy || 'date',
         sortOrder: query.sortOrder === 'desc' ? -1 : 1,
       };
 
